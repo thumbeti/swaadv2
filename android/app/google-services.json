@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1098496236641",
+    "firebase_url": "https://swaadv2.firebaseio.com",
+    "project_id": "swaadv2",
+    "storage_bucket": "swaadv2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098496236641:android:58bff5d4d2c03792aa5e20",
+        "android_client_info": {
+          "package_name": "com.swaadliving.swaadv2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1098496236641-qnb0nl6nr50p2k493us6faav8r7ctngl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swaadliving.swaadv2",
+            "certificate_hash": "c53ad7f691bc6dfdf57a66271ebe21cf5f7e5332"
+          }
+        },
+        {
+          "client_id": "1098496236641-g3h1aa8ipbc4mahk4708t1urh122d5kv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqujMfO0O2wR5_-TUgfsI-DvAgxGoh0ro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1098496236641-g3h1aa8ipbc4mahk4708t1urh122d5kv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
