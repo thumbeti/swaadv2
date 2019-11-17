@@ -26,6 +26,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
 
   // Example code for sign out.
   void _signOut() async {
+
     await _auth.signOut();
   }
 }
