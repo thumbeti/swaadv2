@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swaadv2/Intro.dart';
 import 'package:swaadv2/auth/authentication.dart';
+import 'package:swaadv2/auth/phoneAuthV2.dart';
 //void main() => runApp(MyApp());
 
 void main() {
@@ -27,6 +28,10 @@ class MyApp extends StatelessWidget {
             RaisedButton(
               child: Text('PhoneSignIn Working'),
               onPressed: ()  => _pushPage(context, SignInPage()),
+            ),
+            RaisedButton(
+              child: Text('PhoneSignIn V2'),
+              onPressed: ()  => _pushPage(context, PhoneAuth()),
             ),
           ],
         ),
