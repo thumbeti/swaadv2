@@ -22,16 +22,16 @@ class MyApp extends StatelessWidget {
         child: Column(
           children: <Widget>[
             RaisedButton(
-              child: Text('Intro'),
-              onPressed: ()  => _pushPage(context, Intro()),
+              child: Text('Intro!!'),
+              onPressed: () => _pushPage(context, Intro()),
             ),
             RaisedButton(
               child: Text('PhoneSignIn Working'),
-              onPressed: ()  => _pushPage(context, SignInPage()),
+              onPressed: () => _pushPage(context, SignInPage()),
             ),
             RaisedButton(
               child: Text('PhoneSignIn V2'),
-              onPressed: ()  => _pushPage(context, PhoneAuth()),
+              onPressed: () => _pushPage(context, PhoneAuth()),
             ),
           ],
         ),

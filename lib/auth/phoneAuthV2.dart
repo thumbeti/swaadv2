@@ -1,126 +1,113 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swaadv2/MenuHome.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:swaadv2/OrderingMenu.dart';
+import 'package:swaadv2/auth/regestration.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class PhoneAuth extends StatefulWidget {
   @override
-  _PhoneAuthState createState() => _PhoneAuthState();
+  State<StatefulWidget> createState() => PhoneAuthState();
 }
 
-class _PhoneAuthState extends State<PhoneAuth> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Builder(builder: (BuildContext context) {
-        return ListView(
-          scrollDirection: Axis.vertical,
-          children: <Widget>[
-            _PhoneSignInSection(Scaffold.of(context)),
-          ],
-        );
-      }),
-    );
-  }
-
-  // Example code for sign out.
-  void _signOut() async {
-
-    await _auth.signOut();
-  }
-}
-
-class _PhoneSignInSection extends StatefulWidget {
-  _PhoneSignInSection(this._scaffold);
-
-  final ScaffoldState _scaffold;
-  @override
-  State<StatefulWidget> createState() => _PhoneSignInSectionState();
-}
-
-class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
-  final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _smsController = TextEditingController();
+class PhoneAuthState extends State<PhoneAuth> {
+  final TextEditingController _phoneNumberController = TextEditingController(text: '+16505559999');
+  final TextEditingController _smsController = TextEditingController(text: '999999');
 
   String _message = '';
   String _verificationId;
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          alignment: Alignment.center,
-          color: Colors.white,
-          child: SizedBox(
-            height: 300.0,
-            child: Image(
-              alignment: Alignment.center,
-              image: AssetImage("assets/swaad_logo.jpg"),
-              //fit: BoxFit.fill,
-            ),
-          ),
-        ),
-        SizedBox(height: 45.0),
-        TextFormField(
-          controller: _phoneNumberController,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            labelText: 'Phone number (+x xxx-xxx-xxxx)',
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-          ),
-          validator: (String value) {
-            if (value.isEmpty) {
-              return 'Phone number (+x xxx-xxx-xxxx)';
-            }
-            return null;
-          },
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          alignment: Alignment.center,
-          child: RaisedButton(
-            onPressed: () async {
-              _verifyPhoneNumber();
-            },
-            child: const Text('Verify phone'),
-          ),
-        ),
-        TextField(
-          controller: _smsController,
-          decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-              labelText: 'Verification code',
-              border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          alignment: Alignment.center,
-          child: RaisedButton(
-            onPressed: () async {
-              _signInWithPhoneNumber();
-            },
-            child: const Text('Sign in'),
-          ),
-        ),
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            _message,
-            style: TextStyle(color: Colors.red),
-          ),
-        )
-      ],
-    );
+  // Example code for sign out.
+  void _signOut() async {
+    await _auth.signOut();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Builder(builder: (BuildContext context) {
+          return ListView(
+            scrollDirection: Axis.vertical,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    alignment: Alignment.center,
+                    color: Colors.white,
+                    child: SizedBox(
+                      height: 300.0,
+                      child: Image(
+                        alignment: Alignment.center,
+                        image: AssetImage("assets/swaad_logo.png"),
+                        //fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 45.0),
+                  TextFormField(
+                    controller: _phoneNumberController,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                      labelText: 'Phone number (+x xxx-xxx-xxxx)',
+                      border:
+                          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+                    ),
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Phone number (+x xxx-xxx-xxxx)';
+                      }
+                      return null;
+                    },
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    alignment: Alignment.center,
+                    child: RaisedButton(
+                      onPressed: () async {
+                        _verifyPhoneNumber();
+                      },
+                      child: const Text('Send OTP'),
+                    ),
+                  ),
+                  TextField(
+                    controller: _smsController,
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                        labelText: 'Verification code',
+                        border:
+                          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    alignment: Alignment.center,
+                    child: RaisedButton(
+                      onPressed: () async {
+                        _signInWithPhoneNumber();
+                      },
+                      child: const Text('Sign in'),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      _message,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          );
+        }
+      ),
+    );
+  }
   // Example code of how to verify phone number
   void _verifyPhoneNumber() async {
     setState(() {
@@ -144,9 +131,12 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
 
     final PhoneCodeSent codeSent =
         (String verificationId, [int forceResendingToken]) async {
-      widget._scaffold.showSnackBar(const SnackBar(
-        content: Text('Please check your phone for the verification code.'),
-      ));
+          print("Please check your phone for the verification code.");
+      /*
+      Scaffold.of(context).showSnackBar(const SnackBar(
+            content: Text('Please check your phone for the verification code.'),
+          ),
+          ); */
       _verificationId = verificationId;
     };
 
@@ -176,17 +166,52 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
     assert(user.uid == currentUser.uid);
     setState(() {
       if (user != null) {
-        _message = 'Successfully signed in, uid: ' + user.uid;
+        _message = 'Successfully signed in 22, uid: ' + user.uid;
         print(_message);
-        widget._scaffold.showSnackBar(const SnackBar(
-          content: Text('Successfully signed in..SIVA'),
-        ));
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(builder: (_) => MenuHome()),
-        );
+        var existingUser = _checkIfUserRegistered();
+
+        existingUser.then((x) => {
+          if(x == false) {
+            regesterUser()
+          } else {
+            Navigator.push( context,
+              MaterialPageRoute(builder: (context) => OrderingMenu()),
+              )
+          }
+        }).catchError((e) => print('in catch error'+ e.toString()));
       } else {
         _message = 'Sign in failed';
       }
     });
+  }
+
+  void regesterUser() {
+    print('Welcome to Swaad living.. going for regestration.');
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => Regestration()),
+    );
+  }
+  void addUserRecord() async {
+    final FirebaseUser currentUser = await _auth.currentUser();
+    await Firestore.instance.collection('users')
+        .document(currentUser.uid)
+        .setData({
+          'name' : 'Ram',
+          'phoneNumber' : '+16505559999'
+    });
+  }
+  Future<bool> _checkIfUserRegistered() async {
+    final FirebaseUser currentUser = await _auth.currentUser();
+
+    DocumentReference qs = Firestore.instance.collection('users').document(
+        currentUser.uid);
+    DocumentSnapshot snap = await qs.get();
+    if (snap.data == null) {
+      print('User does not exist.');
+      return false;
+    } else {
+      print('User already exists with ID' + currentUser.uid);
+      return true;
+    }
   }
 }
