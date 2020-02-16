@@ -202,15 +202,16 @@ class PhoneAuthState extends State<PhoneAuth> {
   }
   Future<bool> _checkIfUserRegistered() async {
     final FirebaseUser currentUser = await _auth.currentUser();
+    var phoneNum = _phoneNumberController.text;
 
     DocumentReference qs = Firestore.instance.collection('users').document(
-        currentUser.uid);
+        phoneNum);
     DocumentSnapshot snap = await qs.get();
     if (snap.data == null) {
       print('User does not exist.');
       return false;
     } else {
-      print('User already exists with ID' + currentUser.uid);
+      print('User already exists with ID' + currentUser.uid + phoneNum);
       return true;
     }
   }
