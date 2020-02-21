@@ -204,8 +204,7 @@ class PhoneAuthState extends State<PhoneAuth> {
     final FirebaseUser currentUser = await _auth.currentUser();
     var phoneNum = _phoneNumberController.text;
 
-    DocumentReference qs = Firestore.instance.collection('users').document(
-        phoneNum);
+    DocumentReference qs = Firestore.instance.collection('users').document(phoneNum);
     DocumentSnapshot snap = await qs.get();
     if (snap.data == null) {
       print('User does not exist.');

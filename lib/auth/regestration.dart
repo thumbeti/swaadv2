@@ -74,7 +74,10 @@ class _RegestrationState extends State<Regestration> {
                         onChanged: (String userName){
                           getUserName(userName);
                         },
-                        decoration: InputDecoration(labelText: "Full Name: "),
+                        decoration: InputDecoration(
+                            labelText: "Full Name",
+                            icon: Icon(Icons.person),
+                        ),
                       ),
                     ),
                     Padding(
@@ -119,7 +122,10 @@ class _RegestrationState extends State<Regestration> {
                         onChanged: (String pin) {
                           getPin(pin);
                         },
-                        decoration: InputDecoration(labelText: "PIN code"),
+                        decoration: InputDecoration(
+                            labelText: "PIN code",
+                            icon: Icon(Icons.code),
+                        ),
                       ),
                     ),
                     SizedBox(
