@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:swaadv2/models/menuItem.dart';
+import 'package:swaadv2/models/MenuModels.dart';
 
 /*
 final CollectionReference menuCollection =

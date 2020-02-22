@@ -4,8 +4,8 @@ import 'package:swaadv2/MyCart.dart';
 import 'package:swaadv2/firestoreservices/firestoreservice.dart';
 import 'package:swaadv2/models/CartService.dart';
 import 'dart:async';
-import 'package:swaadv2/models/menuItem.dart';
-import 'package:swaadv2/models/cartMenuItem.dart';
+import 'package:swaadv2/models/MenuModels.dart';
+import 'package:swaadv2/models/SwaadOrder.dart';
 
 class OrderingMenu extends StatelessWidget {
   @override
