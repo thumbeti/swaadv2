@@ -22,11 +22,12 @@ class MyApp extends StatefulWidget {
 }
 
 //State is information of the application that can change over time or when some actions are taken.
-class _MenuPage extends State<MyApp>{
+class _MenuPage extends State<MyApp> {
   String _value = '';
-  int _itemCount = 50;
+
   //List<CartMenuItem> cartItems = new List<CartMenuItem>(50);
   CartService cartService = new CartService();
+
   void _onClick(String value) => setState(() => _value = value);
 
   List<MenuItem> items;
@@ -37,8 +38,10 @@ class _MenuPage extends State<MyApp>{
 
   @override
   void initState() {
-    itemStream =
-          Firestore.instance.collection('menuItems').where('itemOwner', isEqualTo: 'Swaad').snapshots();
+    itemStream = Firestore.instance
+        .collection('menuItems')
+        .where('itemOwner', isEqualTo: 'Swaad')
+        .snapshots();
     cartService.setAllItems(itemStream);
     super.initState();
   }
@@ -50,23 +53,34 @@ class _MenuPage extends State<MyApp>{
         color: Colors.amber,
       ),
       title: Text(document['itemName']),
-      subtitle: Text(document['itemOwner']),
+      subtitle: Text(document['description']),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-         (cartService.getProductReqQ(document['id']) != -1)?
-            new IconButton(icon: new Icon(Icons.remove),
-                                    onPressed: ()=>setState(
-                                            ()=>cartService.removeItemFromCart(document['id'])),)
-                        :new Container(),
-          //_itemCount>50?new Text(_itemCount.toString()) : new Text('ADD'),
-          (cartService.getProductReqQ(document['id']) != -1)?
-              new Text(cartService.getProductReqQ(document['id']).toString()) :
-              new Text('ADD'),
-          new IconButton(icon: new Icon(Icons.add),
-                              onPressed: ()=> setState(
-                              () => cartService.addProductToCart(document['id']),
-                              )),
+          (cartService.getSelectedItemQuantity(
+                      MenuItem.fromJson(document.data)) !=
+                  -1)
+              ? new IconButton(
+                  icon: new Icon(Icons.remove),
+                  onPressed: () => setState(
+                    () => cartService
+                        .removeItemFromCart(MenuItem.fromJson(document.data)),
+                  ),
+                )
+              : new Container(),
+          (cartService.getSelectedItemQuantity(
+                      MenuItem.fromJson(document.data)) !=
+                  -1)
+              ? new Text(cartService
+                  .getSelectedItemQuantity(MenuItem.fromJson(document.data))
+                  .toString())
+              : new Text('ADD'),
+          new IconButton(
+              icon: new Icon(Icons.add),
+              onPressed: () => setState(
+                    () => cartService
+                        .addProductToCart(MenuItem.fromJson(document.data)),
+                  )),
         ],
       ),
     );
@@ -75,12 +89,13 @@ class _MenuPage extends State<MyApp>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Ordering menu")),
+      appBar: AppBar(title: Text("Swaad Menu Items")),
       persistentFooterButtons: <Widget>[
-        new IconButton(icon: new Icon(Icons.add_shopping_cart),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => MyCart(cartService)),
-            ),
+        new IconButton(
+          icon: new Icon(Icons.add_shopping_cart),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => MyCart(cartService)),
+          ),
         ),
       ],
       body: StreamBuilder(

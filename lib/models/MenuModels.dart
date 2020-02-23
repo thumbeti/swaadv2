@@ -5,7 +5,7 @@ part 'MenuModels.g.dart';
 @JsonSerializable()
 class SelectedItem {
   MenuItem item;
-  int quantity;
+  double quantity;
 
   SelectedItem(item, this.quantity): item = item ?? MenuItem;
 
@@ -16,11 +16,11 @@ class SelectedItem {
 
 @JsonSerializable()
 class MenuItem{
-  int id;
+  double id;
   String itemName;
   String itemOwner;
-  int minQuantity;
-  int price;
+  double minQuantity;
+  double price;
   String image;
   String description;
 
