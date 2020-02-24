@@ -166,7 +166,7 @@ class PhoneAuthState extends State<PhoneAuth> {
     assert(user.uid == currentUser.uid);
     setState(() {
       if (user != null) {
-        _message = 'Successfully signed in 22, uid: ' + user.uid;
+        _message = 'Successfully signed in, uid: ' + user.uid;
         print(_message);
         var existingUser = _checkIfUserRegistered();
 

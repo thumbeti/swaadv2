@@ -6,6 +6,31 @@ part of 'MenuModels.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+SwaadOrder _$SwaadOrderFromJson(Map<String, dynamic> json) {
+  return SwaadOrder(
+    SwaadOrder._dateTimeFromEpochUs(json['deliveryTime'] as int),
+    SwaadOrder._dateTimeFromEpochUs(json['orderReceivedDate'] as int),
+    json['orderType'] as String,
+    json['orderBy'] as String,
+    json['status'] as String,
+    (json['items'] as List)
+        ?.map((e) =>
+            e == null ? null : SelectedItem.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$SwaadOrderToJson(SwaadOrder instance) =>
+    <String, dynamic>{
+      'deliveryTime': SwaadOrder._dateTimeToEpochUs(instance.deliveryTime),
+      'orderReceivedDate':
+          SwaadOrder._dateTimeToEpochUs(instance.orderReceivedDate),
+      'orderType': instance.orderType,
+      'orderBy': instance.orderBy,
+      'status': instance.status,
+      'items': instance.items,
+    };
+
 SelectedItem _$SelectedItemFromJson(Map<String, dynamic> json) {
   return SelectedItem(
     json['item'],

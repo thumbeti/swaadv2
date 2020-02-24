@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swaadv2/models/MenuModels.dart';
 
+double _salesTaxRate = 0;
+double _shippingCostPerItem = 0;
+
 class CartService {
   Stream<QuerySnapshot> allItems;
 
@@ -57,5 +60,33 @@ class CartService {
       selectedItems.removeWhere(
           (e) => e.item.id.toDouble() == itemToRemove.id.toDouble());
     }
+  }
+
+  // Totaled prices of the items in the cart.
+  double get subtotalCost {
+    return selectedItems.map((sItem) {
+      // Extended price for product line
+      return sItem.item.price * sItem.quantity;
+    }).fold(0, (accumulator, extendedPrice) {
+      return accumulator + extendedPrice;
+    });
+  }
+
+  // Total shipping cost for the items in the cart.
+  double get shippingCost {
+    return _shippingCostPerItem *
+        _productsInCart.values.fold(0.0, (accumulator, itemCount) {
+          return accumulator + itemCount;
+        });
+  }
+
+  // Sales tax for the items in the cart
+  double get tax {
+    return subtotalCost * _salesTaxRate;
+  }
+
+  // Total cost to order everything in the cart.
+  double get totalCost {
+    return subtotalCost + shippingCost + tax;
   }
 }

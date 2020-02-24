@@ -5,31 +5,16 @@ import 'package:swaadv2/firestoreservices/firestoreservice.dart';
 import 'package:swaadv2/models/CartService.dart';
 import 'dart:async';
 import 'package:swaadv2/models/MenuModels.dart';
-import 'package:swaadv2/models/SwaadOrder.dart';
+import 'package:swaadv2/styles.dart';
 
-class OrderingMenu extends StatelessWidget {
+class OrderingMenu extends StatefulWidget {
+   const OrderingMenu();
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: MyApp(),
-    );
-  }
+  _OrderingMenuState createState() => _OrderingMenuState();
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MenuPage createState() => new _MenuPage();
-}
-
-//State is information of the application that can change over time or when some actions are taken.
-class _MenuPage extends State<MyApp> {
-  String _value = '';
-
-  //List<CartMenuItem> cartItems = new List<CartMenuItem>(50);
+class _OrderingMenuState extends State<OrderingMenu> {
   CartService cartService = new CartService();
-
-  void _onClick(String value) => setState(() => _value = value);
-
   List<MenuItem> items;
   FirestoreService fireServ = new FirestoreService();
   StreamSubscription<QuerySnapshot> menuItems;
@@ -42,7 +27,6 @@ class _MenuPage extends State<MyApp> {
         .collection('menuItems')
         .where('itemOwner', isEqualTo: 'Swaad')
         .snapshots();
-    cartService.setAllItems(itemStream);
     super.initState();
   }
 
@@ -52,7 +36,10 @@ class _MenuPage extends State<MyApp> {
         Icons.fastfood,
         color: Colors.amber,
       ),
-      title: Text(document['itemName']),
+      title: Text(
+        document['itemName'],
+        style: Styles.productRowItemName,
+      ),
       subtitle: Text(document['description']),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
