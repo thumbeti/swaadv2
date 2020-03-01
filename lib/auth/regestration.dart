@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swaadv2/OrderingMenu.dart';
-import '../MenuHome.dart';
 
 class Regestration extends StatefulWidget {
   @override
@@ -149,7 +148,7 @@ class _RegestrationState extends State<Regestration> {
                           onPressed: () {
                             createDate();
                             Navigator.of(context).push(
-                              MaterialPageRoute<void>(builder: (_) => OrderingMenu())
+                              MaterialPageRoute<void>(builder: (_) => OrderingMenu(phoneNum))
                             );
                           },
                           child: const Text (

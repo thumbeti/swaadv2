@@ -5,6 +5,9 @@ double _salesTaxRate = 0;
 double _shippingCostPerItem = 0;
 
 class CartService {
+
+  String phoneNumber;
+
   Stream<QuerySnapshot> allItems;
 
   // The IDs and quantities of products currently in the cart.
@@ -12,6 +15,9 @@ class CartService {
 
   final selectedItems = List<SelectedItem>();
 
+  void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
   void setAllItems(Stream<QuerySnapshot> allItems) {
     this.allItems = allItems;
   }

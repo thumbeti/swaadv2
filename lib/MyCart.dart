@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:swaadv2/OrderingMenu.dart';
 import 'package:swaadv2/models/CartService.dart';
@@ -7,6 +9,8 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swaadv2/models/MenuModels.dart';
 import 'package:swaadv2/styles.dart';
+import 'package:swaadv2/Confirmation.dart';
+import 'package:swaadv2/SaveDataError.dart';
 
 const double _kDateTimePickerHeight = 216;
 
@@ -50,80 +54,6 @@ class _MyCartState extends State<MyCart> {
     );
   }
 
-  Widget _selectedItems() {
-    return StreamBuilder(
-      stream: Firestore.instance
-          .collection('menuItems')
-          .where('itemOwner', isEqualTo: 'Swaad')
-          .snapshots(),
-      //print an integer every 2secs, 10 times
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Text("Loading..");
-        }
-        return ListView.builder(
-          itemExtent: 80.0,
-          itemCount: snapshot.data.documents.length,
-          itemBuilder: (context, index) {
-            //if (widget.cartService.productsInCart.containsKey())
-            return _buildList(context, snapshot.data.documents[index]);
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildNameField() {
-    return CupertinoTextField(
-      prefix: const Icon(
-        CupertinoIcons.person_solid,
-        color: CupertinoColors.lightBackgroundGray,
-        size: 28,
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
-      clearButtonMode: OverlayVisibilityMode.editing,
-      textCapitalization: TextCapitalization.words,
-      autocorrect: false,
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            width: 0,
-            color: CupertinoColors.inactiveGray,
-          ),
-        ),
-      ),
-      placeholder: 'Name',
-      onChanged: (newName) {
-        setState(() {
-          name = newName;
-        });
-      },
-    );
-  }
-
-  Widget _buildEmailField() {
-    return const CupertinoTextField(
-      prefix: Icon(
-        CupertinoIcons.mail_solid,
-        color: CupertinoColors.lightBackgroundGray,
-        size: 28,
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 12),
-      clearButtonMode: OverlayVisibilityMode.editing,
-      keyboardType: TextInputType.emailAddress,
-      autocorrect: false,
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            width: 0,
-            color: CupertinoColors.inactiveGray,
-          ),
-        ),
-      ),
-      placeholder: 'Email',
-    );
-  }
-
   Widget _buildDateAndTimePicker(BuildContext context) {
     return Column(
       children: <Widget>[
@@ -140,7 +70,7 @@ class _MyCartState extends State<MyCart> {
                 ),
                 SizedBox(width: 6),
                 Text(
-                  'Delivery time',
+                  'Pickup time',
                   //style: Styles.deliveryTimeLabel,
                 ),
               ],
@@ -179,15 +109,7 @@ class _MyCartState extends State<MyCart> {
             icon: new Icon(Icons.home),
             alignment: Alignment.center,
             onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => OrderingMenu()),
-            ),
-          ),
-          new IconButton(
-            icon: new Icon(Icons.add_shopping_cart),
-            focusColor: Colors.blue,
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                  builder: (_) => MyCart(widget.cartService)),
+              MaterialPageRoute<void>(builder: (_) => OrderingMenu(widget.cartService.phoneNumber)),
             ),
           ),
         ],
@@ -266,7 +188,7 @@ class _MyCartState extends State<MyCart> {
                     ],
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 30.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -286,7 +208,7 @@ class _MyCartState extends State<MyCart> {
                         onPressed: () {
                           saveOrderDetails();
                           Navigator.of(context).push(MaterialPageRoute<void>(
-                              builder: (_) => OrderingMenu()));
+                              builder: (_) => OrderingMenu(widget.cartService.phoneNumber)));
                         },
                         child: const Text(
                           "Checkout",
@@ -305,7 +227,33 @@ class _MyCartState extends State<MyCart> {
   }
 
   void saveOrderDetails() {
-      return;
+    SwaadOrder swaadOrder = new SwaadOrder();
+    swaadOrder.deliveryTime = dateTime;
+    swaadOrder.orderReceivedDate = new DateTime.now();
+    swaadOrder.orderId = UniqueKey().hashCode.toString();
+    swaadOrder.orderType = 'PICKUP';
+    swaadOrder.orderBy = widget.cartService.phoneNumber;
+    swaadOrder.status = 'PLACED';
+    swaadOrder.items = widget.cartService.selectedItems;
+
+    DocumentReference ds =
+              Firestore.instance.collection('swaadOrders').document(swaadOrder.orderId);
+
+    String sorder = jsonEncode(swaadOrder);
+    ds.setData(jsonDecode(sorder)).whenComplete(() {
+      Text("Added swaad order : " + swaadOrder.orderId);
+      setState(
+            () => widget.cartService.selectedItems.clear(),
+      );
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => Confirmation(widget.cartService.phoneNumber, swaadOrder.orderId)),
+      );
+    }).catchError((e) =>
+      Text("Failed to save swaad order : " + swaadOrder.orderId + e.toString()));
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => SaveDataError(widget.cartService, swaadOrder.orderId)),
+      );
+    return;
   }
 }
 

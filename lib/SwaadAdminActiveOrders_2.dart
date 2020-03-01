@@ -1,27 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:swaadv2/MyCart.dart';
-import 'package:swaadv2/firestoreservices/firestoreservice.dart';
-import 'package:swaadv2/models/CartService.dart';
-import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:swaadv2/OrderingMenu.dart';
 import 'package:swaadv2/models/MenuModels.dart';
 import 'package:swaadv2/styles.dart';
 
-class OrderingMenu extends StatefulWidget {
+class SwaadAdminActiveOrders extends StatefulWidget {
   final String phoneNum;
 
-  const OrderingMenu(this.phoneNum);
+  SwaadAdminActiveOrders(this.phoneNum);
 
   @override
-  _OrderingMenuState createState() => _OrderingMenuState();
+  _SwaadAdminActiveOrdersState createState() => _SwaadAdminActiveOrdersState();
 }
 
-class _OrderingMenuState extends State<OrderingMenu> {
-  CartService cartService = new CartService();
-  List<MenuItem> items;
-  FirestoreService fireServ = new FirestoreService();
-  StreamSubscription<QuerySnapshot> menuItems;
-
+class _SwaadAdminActiveOrdersState extends State<SwaadAdminActiveOrders> {
+  List<SwaadOrder> sOrders;
   Stream<QuerySnapshot> itemStream;
 
   @override
@@ -30,7 +23,6 @@ class _OrderingMenuState extends State<OrderingMenu> {
         .collection('menuItems')
         .where('itemOwner', isEqualTo: 'Swaad')
         .snapshots();
-    cartService.setPhoneNumber(widget.phoneNum);
     super.initState();
   }
 
@@ -48,30 +40,18 @@ class _OrderingMenuState extends State<OrderingMenu> {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          (cartService.getSelectedItemQuantity(
-                      MenuItem.fromJson(document.data)) !=
-                  -1)
-              ? new IconButton(
-                  icon: new Icon(Icons.remove),
-                  onPressed: () => setState(
-                    () => cartService
-                        .removeItemFromCart(MenuItem.fromJson(document.data)),
-                  ),
-                )
-              : new Container(),
-          (cartService.getSelectedItemQuantity(
-                      MenuItem.fromJson(document.data)) !=
-                  -1)
-              ? new Text(cartService
-                  .getSelectedItemQuantity(MenuItem.fromJson(document.data))
-                  .toString())
-              : new Text('ADD'),
+          new IconButton(
+            icon: new Icon(Icons.remove),
+            onPressed: () => setState(
+                  () => new Text("Previous State"),
+            ),
+          ),
+          new Text("Status"),
           new IconButton(
               icon: new Icon(Icons.add),
               onPressed: () => setState(
-                    () => cartService
-                        .addProductToCart(MenuItem.fromJson(document.data)),
-                  )),
+                    () => new Text("Next state"),
+              )),
         ],
       ),
     );
@@ -85,7 +65,7 @@ class _OrderingMenuState extends State<OrderingMenu> {
         new IconButton(
           icon: new Icon(Icons.add_shopping_cart),
           onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute<void>(builder: (_) => MyCart(cartService)),
+            MaterialPageRoute<void>(builder: (_) => OrderingMenu(widget.phoneNum)),
           ),
         ),
       ],

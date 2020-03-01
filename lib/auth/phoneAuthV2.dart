@@ -3,7 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swaadv2/MenuHome.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swaadv2/OrderingMenu.dart';
+import 'package:swaadv2/VendorSwaadOrders.dart';
 import 'package:swaadv2/auth/regestration.dart';
+import 'package:swaadv2/models/UserInfo.dart';
+import 'package:swaadv2/SwaadAdminPage.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -175,7 +178,8 @@ class PhoneAuthState extends State<PhoneAuth> {
             regesterUser()
           } else {
             Navigator.push( context,
-              MaterialPageRoute(builder: (context) => OrderingMenu()),
+              //MaterialPageRoute(builder: (context) => OrderingMenu(_phoneNumberController.text)),
+              MaterialPageRoute(builder: (context) => SwaadAdminPage(_phoneNumberController.text)),
               )
           }
         }).catchError((e) => print('in catch error'+ e.toString()));
