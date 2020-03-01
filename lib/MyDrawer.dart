@@ -41,7 +41,7 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             title: Text(
               'Swaad Orders',
-              style: TextStyle(fontSize: 15.0),
+              style: TextStyle(fontSize: 15.0, color: Colors.white),
             ),
             trailing: Icon(Icons.arrow_forward),
             onTap: () {
