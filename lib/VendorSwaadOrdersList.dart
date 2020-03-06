@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:swaadv2/MyDrawer.dart';
 import 'package:swaadv2/OrderingMenu.dart';
 import 'package:swaadv2/styles.dart';
 
-class VendorSwaadOrders extends StatefulWidget {
+class VendorSwaadOrdersList extends StatefulWidget {
   final String phoneNum;
-  VendorSwaadOrders(this.phoneNum);
+
+  const VendorSwaadOrdersList(this.phoneNum);
 
   @override
-  _VendorSwaadOrdersState createState() => _VendorSwaadOrdersState();
+  _VendorSwaadOrdersListState createState() => _VendorSwaadOrdersListState();
 }
 
-class _VendorSwaadOrdersState extends State<VendorSwaadOrders> {
+class _VendorSwaadOrdersListState extends State<VendorSwaadOrdersList> {
+
   Stream<QuerySnapshot> itemStream;
 
   @override
@@ -50,18 +51,12 @@ class _VendorSwaadOrdersState extends State<VendorSwaadOrders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Your Orders")),
-      drawer: MyDrawer(widget.phoneNum),
       persistentFooterButtons: <Widget>[
         new IconButton(
           icon: new Icon(Icons.home),
-          onPressed: () =>
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => OrderingMenu(widget.phoneNum)),
-              ),
-        ),
-        new IconButton(
-          icon: new Icon(Icons.refresh),
-          onPressed: () => setState(() => {}),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => OrderingMenu(widget.phoneNum)),
+          ),
         ),
       ],
       body: StreamBuilder(

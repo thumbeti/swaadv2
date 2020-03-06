@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:swaadv2/MenuHome.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swaadv2/OrderingMenu.dart';
-import 'package:swaadv2/VendorSwaadOrders.dart';
 import 'package:swaadv2/auth/regestration.dart';
-import 'package:swaadv2/models/UserInfo.dart';
-import 'package:swaadv2/SwaadAdminPage.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -80,7 +76,7 @@ class PhoneAuthState extends State<PhoneAuth> {
                     controller: _smsController,
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                        labelText: 'Verification code',
+                        labelText: 'Verification code (xxxxxx)',
                         border:
                           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
                     ),
@@ -100,7 +96,7 @@ class PhoneAuthState extends State<PhoneAuth> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       _message,
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: Colors.blue),
                     ),
                   )
                 ],
@@ -135,12 +131,10 @@ class PhoneAuthState extends State<PhoneAuth> {
     final PhoneCodeSent codeSent =
         (String verificationId, [int forceResendingToken]) async {
           print("Please check your phone for the verification code.");
-      /*
-      Scaffold.of(context).showSnackBar(const SnackBar(
-            content: Text('Please check your phone for the verification code.'),
-          ),
-          ); */
-      _verificationId = verificationId;
+          setState(() {
+            _message = 'Please check your phone for the verification code.';
+          });
+          _verificationId = verificationId;
     };
 
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
@@ -169,7 +163,7 @@ class PhoneAuthState extends State<PhoneAuth> {
     assert(user.uid == currentUser.uid);
     setState(() {
       if (user != null) {
-        _message = 'Successfully signed in, uid: ' + user.uid;
+        _message = 'Successfully signed in!!';
         print(_message);
         var existingUser = _checkIfUserRegistered();
 
@@ -178,8 +172,8 @@ class PhoneAuthState extends State<PhoneAuth> {
             regesterUser()
           } else {
             Navigator.push( context,
-              //MaterialPageRoute(builder: (context) => OrderingMenu(_phoneNumberController.text)),
-              MaterialPageRoute(builder: (context) => SwaadAdminPage(_phoneNumberController.text)),
+              MaterialPageRoute(builder: (context) => OrderingMenu(_phoneNumberController.text)),
+              //MaterialPageRoute(builder: (context) => SwaadAdminPage(_phoneNumberController.text)),
               )
           }
         }).catchError((e) => print('in catch error'+ e.toString()));

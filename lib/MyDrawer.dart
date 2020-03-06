@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swaadv2/OrderingMenu.dart';
 import 'package:swaadv2/VendorSwaadOrders.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swaadv2/SwaadAdminPage.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -38,12 +37,12 @@ class MyDrawer extends StatelessWidget {
                   builder: (_) => VendorSwaadOrders(phoneNum)));
             },
           ),
+          SizedBox(height: 60),
           ListTile(
             title: Text(
               'Swaad Orders',
-              style: TextStyle(fontSize: 15.0, color: Colors.white),
+              style: TextStyle(fontSize: 15.0, color: Colors.white10),
             ),
-            trailing: Icon(Icons.arrow_forward),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute<void>(
                   builder: (_) => SwaadAdminPage(phoneNum)));

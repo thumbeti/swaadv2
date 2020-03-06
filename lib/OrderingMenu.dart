@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swaadv2/MyCart.dart';
-import 'package:swaadv2/firestoreservices/firestoreservice.dart';
 import 'package:swaadv2/models/CartService.dart';
 import 'dart:async';
 import 'package:swaadv2/models/MenuModels.dart';
 import 'package:swaadv2/styles.dart';
+import 'package:swaadv2/MyDrawer.dart';
 
 class OrderingMenu extends StatefulWidget {
   final String phoneNum;
@@ -18,10 +18,6 @@ class OrderingMenu extends StatefulWidget {
 
 class _OrderingMenuState extends State<OrderingMenu> {
   CartService cartService = new CartService();
-  List<MenuItem> items;
-  FirestoreService fireServ = new FirestoreService();
-  StreamSubscription<QuerySnapshot> menuItems;
-
   Stream<QuerySnapshot> itemStream;
 
   @override
@@ -81,6 +77,7 @@ class _OrderingMenuState extends State<OrderingMenu> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Swaad Menu Items")),
+      drawer: MyDrawer(widget.phoneNum),
       persistentFooterButtons: <Widget>[
         new IconButton(
           icon: new Icon(Icons.add_shopping_cart),

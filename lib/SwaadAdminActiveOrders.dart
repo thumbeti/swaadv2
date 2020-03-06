@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swaadv2/OrderingMenu.dart';
 import 'package:swaadv2/models/MenuModels.dart';
 import 'package:swaadv2/styles.dart';
 import 'package:swaadv2/OrderDetails.dart';
+import 'package:swaadv2/MyDrawer.dart';
 
 class SwaadAdminActiveOrders extends StatefulWidget {
   final String phoneNum;
@@ -65,6 +64,7 @@ class _SwaadAdminActiveOrdersState extends State<SwaadAdminActiveOrders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Action required on..")),
+      drawer: MyDrawer(widget.phoneNum),
       persistentFooterButtons: <Widget>[
         FlatButton.icon(onPressed: () {}, icon: new Icon(Icons.fastfood), label: Text('Test')),
         new IconButton(

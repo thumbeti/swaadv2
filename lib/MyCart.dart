@@ -10,7 +10,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swaadv2/models/MenuModels.dart';
 import 'package:swaadv2/styles.dart';
 import 'package:swaadv2/Confirmation.dart';
-import 'package:swaadv2/SaveDataError.dart';
 
 const double _kDateTimePickerHeight = 216;
 
@@ -36,23 +35,6 @@ class _MyCartState extends State<MyCart> {
   final formats = {
     InputType.both: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
   };
-
-  Widget _buildList(BuildContext context, DocumentSnapshot document) {
-    return ListTile(
-      leading: Icon(
-        Icons.fastfood,
-        color: Colors.amber,
-      ),
-      title: Text(document['itemName']),
-      subtitle: Text(document['itemOwner']),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          new Text('ADD'),
-        ],
-      ),
-    );
-  }
 
   Widget _buildDateAndTimePicker(BuildContext context) {
     return Column(
@@ -109,7 +91,8 @@ class _MyCartState extends State<MyCart> {
             icon: new Icon(Icons.home),
             alignment: Alignment.center,
             onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => OrderingMenu(widget.cartService.phoneNumber)),
+              MaterialPageRoute<void>(
+                  builder: (_) => OrderingMenu(widget.cartService.phoneNumber)),
             ),
           ),
         ],
@@ -208,7 +191,8 @@ class _MyCartState extends State<MyCart> {
                         onPressed: () {
                           saveOrderDetails();
                           Navigator.of(context).push(MaterialPageRoute<void>(
-                              builder: (_) => OrderingMenu(widget.cartService.phoneNumber)));
+                              builder: (_) => OrderingMenu(
+                                  widget.cartService.phoneNumber)));
                         },
                         child: const Text(
                           "Checkout",
@@ -226,7 +210,7 @@ class _MyCartState extends State<MyCart> {
     );
   }
 
-  void saveOrderDetails() {
+  void saveOrderDetails() async {
     SwaadOrder swaadOrder = new SwaadOrder();
     swaadOrder.deliveryTime = dateTime;
     swaadOrder.orderReceivedDate = new DateTime.now();
@@ -235,24 +219,24 @@ class _MyCartState extends State<MyCart> {
     swaadOrder.orderBy = widget.cartService.phoneNumber;
     swaadOrder.status = 'PLACED';
     swaadOrder.items = widget.cartService.selectedItems;
-
-    DocumentReference ds =
-              Firestore.instance.collection('swaadOrders').document(swaadOrder.orderId);
-
     String sorder = jsonEncode(swaadOrder);
-    ds.setData(jsonDecode(sorder)).whenComplete(() {
-      Text("Added swaad order : " + swaadOrder.orderId);
+
+    //DocumentReference ds =
+    await Firestore.instance
+        .collection('swaadOrders')
+        .document(swaadOrder.orderId)
+        .setData(jsonDecode(sorder))
+        .whenComplete(() =>  {
+      Text("Added swaad order : " + swaadOrder.orderId),
       setState(
-            () => widget.cartService.selectedItems.clear(),
-      );
+        () => widget.cartService.selectedItems.clear(),
+      ),
       Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => Confirmation(widget.cartService.phoneNumber, swaadOrder.orderId)),
-      );
-    }).catchError((e) =>
-      Text("Failed to save swaad order : " + swaadOrder.orderId + e.toString()));
-      Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => SaveDataError(widget.cartService, swaadOrder.orderId)),
-      );
+        MaterialPageRoute<void>(
+            builder: (_) => Confirmation(
+                widget.cartService.phoneNumber, swaadOrder.orderId)),
+      ),
+    });
     return;
   }
 }
