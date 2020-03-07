@@ -22,11 +22,9 @@ class _SwaadAdminActiveOrdersState extends State<SwaadAdminActiveOrders> {
   @override
   void initState() {
     itemStream = Firestore.instance
-        .collection('swaadOrders').orderBy('deliveryTime', descending: true)
-        //.getDocuments().asStream().map((x) => { x[status] == 'PLACED'}).toList();
-        //.where('status', isEqualTo: 'PLACED')
-        //.where('status', isEqualTo: 'DONE')
-        //.where('status', {'PLACED' isEqualTo, 'DONE' isEqualTo})
+        .collection('swaadOrders')
+        .where('status', whereIn: ['PLACED', 'PAY_PENDING', 'MAKING', 'READY'])
+        .orderBy('deliveryTime', descending: true)
         .snapshots();
     super.initState();
   }
@@ -66,7 +64,6 @@ class _SwaadAdminActiveOrdersState extends State<SwaadAdminActiveOrders> {
       appBar: AppBar(title: Text("Action required on..")),
       drawer: MyDrawer(widget.phoneNum),
       persistentFooterButtons: <Widget>[
-        FlatButton.icon(onPressed: () {}, icon: new Icon(Icons.fastfood), label: Text('Test')),
         new IconButton(
           icon: new Icon(Icons.refresh),
           onPressed: () => Navigator.of(context).push(
@@ -75,12 +72,6 @@ class _SwaadAdminActiveOrdersState extends State<SwaadAdminActiveOrders> {
         ),
         new IconButton(
           icon: new Icon(Icons.home),
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute<void>(builder: (_) => OrderingMenu(widget.phoneNum)),
-          ),
-        ),
-        new IconButton(
-          icon: new Icon(Icons.update),
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute<void>(builder: (_) => OrderingMenu(widget.phoneNum)),
           ),
